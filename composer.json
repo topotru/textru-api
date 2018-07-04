@@ -1,0 +1,29 @@
+{
+  "name": "topotru/textru-api",
+  "type": "library",
+  "description": "text.ru api client",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "topot",
+      "email": "topotru@gmail.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "^6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "7.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "TopotRu\\TextRu\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "TopotRu\\TextRu\\Tests\\": "tests/"
+    }
+  }
+}
