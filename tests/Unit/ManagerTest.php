@@ -24,7 +24,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     const VAL_APIKEY = 'apikey';
     
     /**
-     * @var MockObject
+     * @var MockObject|ClientInterface
      */
     protected $clientMock;
     
@@ -32,6 +32,20 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      * @var Manager
      */
     protected $manager;
+    
+    /**
+     *
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        
+        $this->clientMock = $this->getMockBuilder(ClientInterface::class)
+            //->setMethods(['request'])
+            ->getMock();
+        
+        $this->manager = new Manager(self::VAL_APIKEY, $this->clientMock);
+    }
     
     /**
      * @throws \TopotRu\TextRu\Api\Exception\ApiException
@@ -101,19 +115,5 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         
         $this->assertEquals(115, $actual);
         
-    }
-    
-    /**
-     *
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        
-        $this->clientMock = $this->getMockBuilder(ClientInterface::class)
-            //->setMethods(['request'])
-            ->getMock();
-        
-        $this->manager = new Manager(self::VAL_APIKEY, $this->clientMock);
     }
 }
