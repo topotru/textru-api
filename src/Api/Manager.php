@@ -129,7 +129,7 @@ class Manager
     public function tryGetResult($textId)
     {
         try {
-            $result = (string)$this->client->request(self::API_METHOD, self::API_URI_POST, [
+            $jsonResponse = (string)$this->client->request(self::API_METHOD, self::API_URI_POST, [
                     'form_params' => [
                         'uid'         => $textId,
                         'userkey'     => $this->apiKey,
@@ -137,8 +137,8 @@ class Manager
                     ],
                 ]
             )->getBody();
-            
-            return $this->parseResult($result, $textId);
+    
+            return $this->parseResult($jsonResponse, $textId);
             
         } catch (GuzzleException | \Exception $e) {
             throw new ApiException($e->getMessage(), $e->getCode(), $e);
@@ -150,10 +150,15 @@ class Manager
      * @param string $requestContent
      * @param null|string $textId
      * @return CheckResult
+     * @throws ApiException
      */
     public function parseResult($requestContent, $textId = null)
     {
         $result = json_decode($requestContent, true);
+    
+        if (isset($result['error_code'])) {
+            throw new ApiException($result['error_desc'] ?? '_unknown_', $result['error_code']);
+        }
         
         $seoResult    = isset($result['seo_check']) ? json_decode($result['seo_check'], true) : [];
         $waterPercent = isset($seoResult['water_percent']) ? $seoResult['water_percent'] : 0;
@@ -173,18 +178,22 @@ class Manager
     public function getAvailableSymbols()
     {
         try {
-            
-            $result = $this->client->request(self::API_METHOD, self::API_URI_ACCOUNT, [
+    
+            $jsonResponse = $this->client->request(self::API_METHOD, self::API_URI_ACCOUNT, [
                     'form_params' => [
                         'method'  => 'get_packages_info',
                         'userkey' => $this->apiKey,
                     ],
                 ]
             )->getBody()->getContents();
-            
-            $arr = json_decode($result, true);
-            
-            return (int)$arr['size'];
+    
+            $result = json_decode($jsonResponse, true);
+    
+            if (isset($result['error_code'])) {
+                throw new ApiException($result['error_desc'] ?? '_unknown_', $result['error_code']);
+            }
+    
+            return (int)$result['size'];
             
         } catch (GuzzleException | \Exception $e) {
             throw new ApiException($e->getMessage(), $e->getCode(), $e);
