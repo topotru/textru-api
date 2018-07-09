@@ -66,13 +66,17 @@ class Manager
                 $excludedDomains
             );
     
-            $result = $this->client->request(self::API_METHOD, self::API_URI_POST, ['form_params' => $data])
+            $requestContent = $this->client->request(self::API_METHOD, self::API_URI_POST, ['form_params' => $data])
                 ->getBody()
                 ->getContents();
-            
-            $arr = json_decode($result, true);
-            
-            return $arr['text_uid'];
+    
+            $result = json_decode($requestContent, true);
+    
+            if (isset($result['error_code'])) {
+                throw new ApiException($result['error_desc'] ?? '_unknown_', $result['error_code']);
+            }
+    
+            return $result['text_uid'];
             
         } catch (GuzzleException | \Exception $e) {
             throw new ApiException($e->getMessage(), $e->getCode(), $e);
