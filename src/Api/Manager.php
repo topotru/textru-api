@@ -65,8 +65,8 @@ class Manager
                 $hasResultVisualReport,
                 $excludedDomains
             );
-            
-            $result = $this->client->request(self::API_METHOD, self::API_URI_POST, ['body' => $data])
+    
+            $result = $this->client->request(self::API_METHOD, self::API_URI_POST, ['form_params' => $data])
                 ->getBody()
                 ->getContents();
             
@@ -130,7 +130,7 @@ class Manager
     {
         try {
             $result = (string)$this->client->request(self::API_METHOD, self::API_URI_POST, [
-                    'body' => [
+                    'form_params' => [
                         'uid'         => $textId,
                         'userkey'     => $this->apiKey,
                         'jsonvisible' => 'detail',
@@ -175,7 +175,7 @@ class Manager
         try {
             
             $result = $this->client->request(self::API_METHOD, self::API_URI_ACCOUNT, [
-                    'body' => [
+                    'form_params' => [
                         'method'  => 'get_packages_info',
                         'userkey' => $this->apiKey,
                     ],

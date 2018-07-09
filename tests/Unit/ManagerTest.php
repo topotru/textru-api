@@ -62,7 +62,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         ];
         
         $this->clientMock->method('request')
-            ->with(Manager::API_METHOD, Manager::API_URI_POST, ['body' => $data])
+            ->with(Manager::API_METHOD, Manager::API_URI_POST, ['form_params' => $data])
             ->willReturn(new Response(200, [], '{"text_uid":"12345"}'));
         
         $result = $this->manager->check($data['text'], $data['callback'], true, false, ['test.com', 'mail.ru']);
@@ -78,7 +78,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $this->clientMock->method('request')
             ->with(Manager::API_METHOD, Manager::API_URI_POST, [
-                    'body' => [
+                    'form_params' => [
                         'uid'         => '12345',
                         'userkey'     => self::VAL_APIKEY,
                         'jsonvisible' => 'detail',
@@ -108,7 +108,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testAvailableSymbols()
     {
         $this->clientMock->method('request')
-            ->with(Manager::API_METHOD, Manager::API_URI_ACCOUNT, ['body' => ['method' => 'get_packages_info', 'userkey' => self::VAL_APIKEY]])
+            ->with(Manager::API_METHOD, Manager::API_URI_ACCOUNT, ['form_params' => ['method' => 'get_packages_info', 'userkey' => self::VAL_APIKEY]])
             ->willReturn(new Response(200, [], '{"size":115}'));
         
         $actual = $this->manager->getAvailableSymbols();
